@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+[System.Serializable]
 public struct MapElement
 {
 	public Material material;
@@ -10,12 +11,13 @@ public struct MapElement
 }
 
 // This struct stores the full data of an editable map
+[System.Serializable]
 public struct EditableMap
 {
 	public int sizeX; //number of columns in the map
 	public int sizeY; //number of rows in the map
 	
-	private int[,] grids; 
+	private int[,] grids; //the map
 	// For example:
 	// grid[1, 1] = 0 means
 	// the 0th element in the MapElement (below)
