@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,7 +11,18 @@ namespace Editor
     public class TileType
     {
         public Material Material;
-        public float Cost;
+        
+        private float cost;
+
+        public float Cost
+        {
+            get => cost;
+            set
+            {
+                cost = value;
+                cost = Mathf.Max(.001f, cost);
+            }
+        }
         public char Symbol;
         public string Name => Material.name;
         public string MaterialPath => AssetDatabase.GetAssetPath(Material);
@@ -55,6 +67,7 @@ namespace Editor
                 }
                 materialDictionary.Add(symbol, material);
             }
+            Debug.Log($"Successfully loaded {materialDictionary.Count} materials");
             for (var i = 0; i < costsRE.Count; i++)
             {
                 var split = costsRE[i].Groups[1].Value.Replace("\'","").Replace("f", "").Split();
@@ -66,42 +79,65 @@ namespace Editor
             {
                 if (!costDictionary.TryGetValue(pair.Key, out var value))
                 {
-                    Debug.LogError("Load Failed: No movement cost found for material " + pair.Value.name);
+                    Debug.LogError($"Load Failed: No movement cost found for material {pair.Value.name}, symbol {pair.Key}");
                     return null;
                 }
                 tileTypes.Add(new TileType(pair.Value, value, pair.Key));
             }
             return tileTypes;
         }
+        
+        public static string ToSaveMaterialPathString(List<TileType> tileTypes)
+        {
+            var result = "";
+            foreach (var tileType in tileTypes)
+            {
+                result += $"\t\t\t{{'{tileType.Symbol}', \"{tileType.MaterialPath.Replace("Assets/Resources/", "").Replace(".mat","")}\"}},\n";
+            }
+            return result;
+        }
+        
+        public static string ToSaveCostString(List<TileType> tileTypes)
+        {
+            var result = "";
+            foreach (var tileType in tileTypes)
+            {
+                result += $"\t\t\t{{'{tileType.Symbol}', {tileType.Cost}f}},\n";
+            }
+            return result;
+        }
     }
 
     public static class UniqueCharGenerator
     {
         //starting from ASCII 0
-        private static char currentChar = (char) 0;
+        // private static char currentChar = (char) 33;
+        //
+        // private static char[] invalidChars = {'\n', '\r', '\t', ' ', '\'', '\"', '\\', ',', ' '};
         
-        private static char[] invalidChars = {'\n', '\r', '\t', ' ', '\'', '\"', '\\', ',', ' '};
+        private static string validChars = "abcdeghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        private static int currentCharIndex = 0;
+        private static char currentChar => validChars[currentCharIndex];
         
         public static char GetUniqueChar()
         {
-            var newChar = currentChar++;
-            if (Array.IndexOf(invalidChars, newChar) != -1)
+            // while (invalidChars.Contains(currentChar))
+            // {
+            //     currentChar++;
+            // }
+            currentCharIndex++;
+            if (currentCharIndex >= validChars.Length)
             {
-                newChar = currentChar++;
+                currentCharIndex = 0;
             }
-
-            return newChar;
+            return currentChar;
         }
         
         public static void Reset()
         {
-            currentChar = (char) 0;
+            currentCharIndex = 0;
         }
         
-        public static void SetCurrentChar(char c)
-        {
-            currentChar = c;
-        }
     }
     
     
@@ -112,12 +148,17 @@ namespace Editor
         public static Vector2Int GridSize
         {
             get => gridSize;
-            set => gridSize = value;
+            set
+            {
+                value.x = Mathf.Max(1, value.x);
+                value.y = Mathf.Max(1, value.y);
+                gridSize = value;
+            }
         }
-        
+
         private static TextAsset gridScript;
-        private static string gridScriptPath;
-        private static string gridScriptName;
+        private static string gridScriptPath = "Assets/Scripts/Grids/";
+        private static string gridScriptName = "";
         
         private static List<TileType> tileTypes = new List<TileType>();
         private static TileType selectedTileType;
@@ -127,6 +168,7 @@ namespace Editor
         private static Material newTileMaterial;
         private static float newTileCost;
         private static List<String> gridString = new List<string>();
+        private static string scriptTemplateString;
 
         private void OnGUI()
         {
@@ -135,21 +177,109 @@ namespace Editor
                 EditorGUILayout.HelpBox("Waiting for compiling....", MessageType.Info);
                 return;
             }
+
+            if (EditorApplication.isPlaying)
+            {
+                EditorGUILayout.HelpBox("Cannot edit grid while playing", MessageType.Info);
+                return;
+            }
             
             EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField("Edit Existing Script", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("From Existing Script", EditorStyles.boldLabel);
             gridScript = (TextAsset) EditorGUILayout.ObjectField("Grid Script", gridScript, typeof(TextAsset), false);
             LoadGridScriptButton();
+            SaveToCurrentFileButton();
             EditorGUILayout.EndVertical();
+            SaveToNewFile();
             TileEditorButtons();
             TileCreator();
+            GridSize = EditorGUILayout.Vector2IntField("Grid Size", GridSize);
             Grid();
         }
 
-        private void SaveToCurrentFile()
+        private void SaveToNewFile()
         {
+            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.LabelField("Save To New File", EditorStyles.boldLabel);
+            gridScriptName = EditorGUILayout.TextField("Grid Script Name", gridScriptName);
+            if (!IsValidFileName(gridScriptName))
+            {
+                EditorGUILayout.HelpBox("Invalid script name", MessageType.Error);
+                EditorGUILayout.EndVertical();
+                return;
+            }
+            gridScriptPath = EditorGUILayout.TextField("Grid Script Path", gridScriptPath);
+            if (!Directory.Exists(gridScriptPath))
+            {
+                EditorGUILayout.HelpBox("Invalid script path", MessageType.Error);
+                EditorGUILayout.EndVertical();
+                return;
+            }
+            if (GUILayout.Button("Save To New File"))
+            {
+                var gridScriptText = GenerateScriptText();
+                var className = gridScriptName;
+                gridScriptText = System.Text.RegularExpressions.Regex.Replace(gridScriptText, "public class (.*?):",
+                    $"public class {className}:", System.Text.RegularExpressions.RegexOptions.Singleline);
+                //Create the file
+                var path = $"{gridScriptPath}/{gridScriptName}.cs";
+                if (File.Exists(path))
+                {
+                    Debug.LogError("File already exists");
+                    return;
+                }
+                File.WriteAllText(path, gridScriptText);
+                AssetDatabase.Refresh();
+            }
             
+            EditorGUILayout.EndVertical();
         }
+        
+        private bool IsValidFileName(string fileName)
+        {
+            return fileName.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) == -1 && fileName.Length > 0 &&
+                   char.IsLetter(fileName[0]);
+        }
+
+        private void SaveToCurrentFileButton()
+        {
+            if (GUILayout.Button("Save To Selected File"))
+            {
+                if (!gridScript)
+                {
+                    Debug.LogError("Grid script is null");
+                    return;
+                }
+
+                var gridScriptText = GenerateScriptText();
+                var className = gridScript.name;
+                gridScriptText = System.Text.RegularExpressions.Regex.Replace(gridScriptText, "public class (.*?):",
+                    $"public class {className}:", System.Text.RegularExpressions.RegexOptions.Singleline);
+                File.WriteAllText(AssetDatabase.GetAssetPath(gridScript), gridScriptText);
+                AssetDatabase.Refresh();
+            }
+        }
+
+        private string GenerateScriptText()
+        {
+            var result = scriptTemplateString;
+            var tileMatPaths = TileType.ToSaveMaterialPathString(tileTypes);
+            var tileCosts = TileType.ToSaveCostString(tileTypes);
+            var gridStrings = "";
+            for (int i = 0; i < gridString.Count; i++)
+            {
+                gridStrings += $"\t\t\t\"{gridString[i]}\",\n";
+            }
+            //RE replace
+            result = System.Text.RegularExpressions.Regex.Replace(result, "//RE_MARK_0_START(.*?)//RE_MARK_0_END",
+                $"//RE_MARK_0_START\n{gridStrings}\t\t\t//RE_MARK_0_END\n", System.Text.RegularExpressions.RegexOptions.Singleline);
+            result = System.Text.RegularExpressions.Regex.Replace(result, "//RE_MARK_1_START(.*?)//RE_MARK_1_END",
+                $"//RE_MARK_1_START\n{tileMatPaths}\t\t\t//RE_MARK_1_END\n", System.Text.RegularExpressions.RegexOptions.Singleline);
+            result = System.Text.RegularExpressions.Regex.Replace(result, "//RE_MARK_2_START(.*?)//RE_MARK_2_END", 
+                $"//RE_MARK_2_START\n{tileCosts}\t\t\t//RE_MARK_2_END\n", System.Text.RegularExpressions.RegexOptions.Singleline);
+            return result;
+        }
+        
 
         private void Grid()
         {
@@ -175,6 +305,31 @@ namespace Editor
             GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
             buttonStyle.imagePosition = ImagePosition.ImageOnly;
             
+            //adjust the grid size
+            while (gridString.Count < gridSize.y)
+            {
+                gridString.Add(new string(tileTypes[0].Symbol, gridSize.x));
+            }
+            while (gridString.Count > gridSize.y)
+            {
+                gridString.RemoveAt(gridString.Count - 1);
+            }
+
+            while (gridString[0].Length < gridSize.x)
+            {
+                for (int i = 0; i < gridString.Count; i++)
+                {
+                    gridString[i] += tileTypes[0].Symbol;
+                }
+            }
+            while (gridString[0].Length > gridSize.x)
+            {
+                for (int i = 0; i < gridString.Count; i++)
+                {
+                    gridString[i] = gridString[i].Remove(gridString[i].Length - 1);
+                }
+            }
+            
             for (int y = 0; y < gridSize.y; y++)
             {
                 EditorGUILayout.BeginHorizontal();
@@ -187,6 +342,7 @@ namespace Editor
                         Debug.LogWarning(
                             $"Tile type not found for symbol \"{tile}\", setting to default {tileTypes[0].Material.name}");
                         tileType = tileTypes[0];
+                        gridString[y] = gridString[y].Remove(x, 1).Insert(x, tileType.Symbol.ToString());
                     }
                     if (GUILayout.Button(tileType.Material.mainTexture, buttonStyle,GUILayout.Width(30), GUILayout.Height(30)))
                     {
@@ -224,10 +380,12 @@ namespace Editor
                     newChar = UniqueCharGenerator.GetUniqueChar();
                 }
                 tileTypes.Add(new TileType(newTileMaterial, newTileCost, newChar));
+                Debug.Log($"Tile created successfully, symbol: {newChar}");
             }
 
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
+        
         
 
         private void TileEditorButtons()
@@ -265,6 +423,7 @@ namespace Editor
                     {
                         selectedTileType = tiles;
                     }
+                    
                     if (GUILayout.Button("X", GUILayout.Width(25), GUILayout.Height(15)))
                     {
                         toRemove.Add(tiles);
@@ -273,7 +432,6 @@ namespace Editor
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.BeginVertical();
                 tiles.Cost = EditorGUILayout.FloatField("Movement Cost", tiles.Cost);
-                tiles.Cost = Mathf.Max(0, tiles.Cost);
                 tiles.Material = (Material) EditorGUILayout.ObjectField("Material", tiles.Material, typeof(Material),
                     false);
                 EditorGUILayout.EndVertical();
@@ -295,7 +453,13 @@ namespace Editor
                 gridScriptName = gridScript.name;
                 tileTypes.Clear();
                 var gridScriptText = gridScript.text;
-                var tileMatStrings = System.Text.RegularExpressions.Regex.Matches(gridScriptText,
+                LoadFromString(gridScriptText);
+            }
+        }
+
+        private static void LoadFromString(string gridScriptText)
+        {
+            var tileMatStrings = System.Text.RegularExpressions.Regex.Matches(gridScriptText,
                     "//RE_MARK_1_START(.*?)//RE_MARK_1_END", System.Text.RegularExpressions.RegexOptions.Singleline);
                 if (tileMatStrings.Count == 0)
                 {
@@ -336,7 +500,6 @@ namespace Editor
                 }
                 gridSize = new Vector2Int(gridString[0].Length, gridString.Count);
                 Debug.Log($"Grid loaded successfully, size: {gridSize}");
-            }
         }
         
 
@@ -345,6 +508,27 @@ namespace Editor
         {
             GetWindow(typeof(GridEditor));
             UniqueCharGenerator.Reset();
+            LoadTemplate();
+        }
+
+        private static void LoadTemplate()
+        {
+            var templatePath = "Assets/Editor/GridScriptTemplate.txt";
+            if (!File.Exists(templatePath))
+            {
+                Debug.LogError("Template file not found");
+                return;
+            }
+            scriptTemplateString = File.ReadAllText(templatePath);
+            LoadFromString(scriptTemplateString);
+            selectedTileType = tileTypes[0];
+            Debug.Log("Template loaded successfully");
+        }
+
+        private void OnProjectChange()
+        {
+            UniqueCharGenerator.Reset();
+            LoadTemplate();
         }
     }
 }

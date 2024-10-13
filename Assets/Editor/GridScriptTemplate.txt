@@ -3,26 +3,25 @@ using UnityEngine;
 
 namespace Grids
 {
-    public class TestGridScript : GridScript
+    public class GridScriptTemplate : GridScript
     {
         
         string[] gridString = new string[]{
             //RE_MARK_0_START
-            "ww--|-rw-|----|------------",
-            "-ww-|-wr-rrrr-|---rrrr-----",
-            "-ww-|----r----|------r--www",
-            "-ww-|----r----|------r--ww-",
-            "-ww-|----rrrrrrrrrrrr--dww-",
-            "-wwwwwwww|----|-------dww--",
-            "-wwwwwwwwww---|------d-----",
-            "----|---www---|-----dd-----",
-            "----|---www---|----dd------",
-            "--ddd----w--www---dd-------",
-            "--drd----wwww-w--dd--------",
-            "--drd----|----wwdd---------",
-            "--dddddd-|----|wdd---------",
-            "----dddddd----|------------",
-            "----|---dd----|------------",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
+            "000000000000000000000000000",
             //RE_MARK_0_END
         };
 
@@ -31,22 +30,14 @@ namespace Grids
         private Dictionary<char, string> materialPathDictionary = new Dictionary<char, string>()
         {
             //RE_MARK_1_START
-            {'w', "_Core/Materials/Water"},
-            {'r', "_Core/Materials/Rock"},
-            {'-', "_Core/Materials/Grass"},
-            {'d', "_Core/Materials/Rock"},
-            {'|', "_Core/Materials/Forest"},
+            {'0', "_Core/Materials/Grass"},
             //RE_MARK_1_END
         };
         
         private Dictionary<char, float> costDictionary = new Dictionary<char, float>()
         {
             //RE_MARK_2_START
-            {'w', 1.34f},
-            {'r', 1},
-            {'d', 10},
-            {'-', 1},
-            {'|', 1},
+            {'0', 0.1f},
             //RE_MARK_2_END
         };
 
@@ -55,6 +46,7 @@ namespace Grids
             LoadMaterials();
             gridWidth = gridString[0].Length;
             gridHeight = gridString.Length;
+            Debug.Log($"width: {gridWidth}, height: {gridHeight}");
         }
 
         public void LoadMaterials()
