@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
+using Cursor = UnityEngine.Cursor;
 
 public class FirstGridScript : GridScript {
 
@@ -11,13 +14,13 @@ public class FirstGridScript : GridScript {
 		"-ww-|----r----|------r--ww-",
 		"-ww-|----rrrrrrrrrrrr--dww-",
 		"-wwwwwwww|----|-------dww--",
-		"-wwwwwwwwww---|------d-----",
+		"-wwwwwwwwww---|---c--d-----",
 		"----|---www---|-----dd-----",
 		"----|---www---|----dd------",
 		"--ddd----w--www---dd-------",
 		"--drd----wwww-w--dd--------",
-		"--drd----|----wwdd---------",
-		"--dddddd-|----|wdd---------",
+		"--drd-c--|----wwdd---------",
+		"--dddddd-|----|wdd----cc---",
 		"----dddddd----|------------",
 		"----|---dd----|------------",
 	};
@@ -44,11 +47,23 @@ public class FirstGridScript : GridScript {
 		case 'r': 
 			mat = mats[3];
 			break;
+		case 'c':
+			mat = mats[4];
+			break;
 		default: 
 			mat = mats[0];
 			break;
 		}
 	
 		return mat;
+	}
+
+	public void Update()
+	{
+		if (Input.GetMouseButtonDown(0))
+		{
+			Debug.Log("The mouse click occured at:" + Input.mousePosition);
+		}
+		// throw new NotImplementedException();
 	}
 }
