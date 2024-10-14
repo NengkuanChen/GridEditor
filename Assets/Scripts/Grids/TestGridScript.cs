@@ -87,6 +87,7 @@ namespace Grids
         {
 	        StringBuilder sb = new StringBuilder(gridString[y]);
 	        sb[x] = indicator;
+	        Debug.Log(gridString[y] + "\n changed to :\n" + sb.ToString());
 	        gridString[y] = sb.ToString();
 	        UpdateTile(x, y);
         }
@@ -94,9 +95,20 @@ namespace Grids
         // Change the tile on (x, y) to a random material
         public void RandomChangeTile(int x, int y)
         {
+	        Debug.Log("KK");
 	        var keys = materialDictionary.Keys.ToArray();
 	        char key = keys[Random.Range(0, keys.Length)];
 	        ChangeTile(x, y, key);
+        }
+
+        void Update()
+        {
+	        // if (Input.GetKeyDown(KeyCode.K))
+		       //  RandomChangeTile(0,0);
+	        // if(Input.GetKeyDown(KeyCode.J))
+		       //  RandomChangeTile(2,2);
+	        // if(Input.GetKeyDown(KeyCode.L))
+		       //  RandomChangeTile(gridWidth - 1,gridHeight-1);
         }
         
         public void LoadMaterials()
