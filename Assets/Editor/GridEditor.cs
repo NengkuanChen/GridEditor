@@ -251,7 +251,7 @@ namespace Editor
                     return;
                 }
 
-                var gridScriptText = GenerateScriptText();
+                var gridScriptText = GenerateScriptText(false);
                 var className = gridScript.name;
                 gridScriptText = System.Text.RegularExpressions.Regex.Replace(gridScriptText, "public class (.*?):",
                     $"public class {className}:", System.Text.RegularExpressions.RegexOptions.Singleline);
@@ -260,9 +260,13 @@ namespace Editor
             }
         }
 
-        private string GenerateScriptText()
+        private string GenerateScriptText(bool overwrite = true)
         {
             var result = scriptTemplateString;
+            if (!overwrite)
+            {
+                result = gridScript.text;
+            }
             var tileMatPaths = TileType.ToSaveMaterialPathString(tileTypes);
             var tileCosts = TileType.ToSaveCostString(tileTypes);
             var gridStrings = "";
