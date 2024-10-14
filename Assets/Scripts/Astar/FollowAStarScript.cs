@@ -49,7 +49,17 @@ public class FollowAStarScript : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	protected virtual void Update () {
+	protected virtual void Update () 
+	{
+		if (this.gameObject.name == "Daisy")
+		{
+			DaisyWASD();
+		}
+		if (this.gameObject.name == "Peach")
+		{
+			PeachUPDOWN();
+			//
+		}
 
 		if(move){
 			lerpPer += Time.deltaTime/destPos.moveCost;
@@ -119,9 +129,48 @@ public class FollowAStarScript : MonoBehaviour {
 
 	}
 
+	public void StartButton()
+	{
+		enemyPrincess.gameObject.SetActive(true);
+		this.gameObject.SetActive(true);
+	}
+	
 	public void PrincessSpeedDown()
 	{
 		lerpPer = 0.1f;
+	}
+
+	public void DaisyWASD()
+	{
+		if (Input.GetKeyDown(KeyCode.W))
+		{
+			Debug.Log("ur pressing w");
+			PrincessSpeedUp();
+		}
+
+		if (Input.GetKeyDown(KeyCode.S))
+		{
+			Debug.Log("ur pressing s");
+			ChangeSpeed();
+		}
+		
+	}
+	
+	
+	public void PeachUPDOWN()
+	{
+		if (Input.GetKeyDown(KeyCode.UpArrow))
+		{
+			Debug.Log("ur pressing w");
+			PrincessSpeedUp();
+		}
+
+		if (Input.GetKeyDown(KeyCode.DownArrow))
+		{
+			Debug.Log("ur pressing s");
+			ChangeSpeed();
+		}
+		
 	}
 }
 
