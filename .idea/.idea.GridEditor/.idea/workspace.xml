@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54d25edd-724f-4beb-a964-c725c707c9f9" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.GridEditor/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GridEditor/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/FirstGrid.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/FirstGrid.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Astar/FollowAStarScript.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Astar/FollowAStarScript.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Grids/EditableGridScript.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Grids/EditableGridScript.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Students/_AllisonTerry/Scenes/AllisonTerrySecondGrid.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Students/_AllisonTerry/Scenes/AllisonTerrySecondGrid.unity" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +122,7 @@
       <workItem from="1728847969039" duration="70000" />
       <workItem from="1728848825373" duration="9237000" />
       <workItem from="1728914772533" duration="91000" />
-      <workItem from="1728914878667" duration="2842000" />
+      <workItem from="1728914878667" duration="3298000" />
     </task>
     <servers />
   </component>

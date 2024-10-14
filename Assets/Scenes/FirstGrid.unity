@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualizeGridSpacesVisited: 0
-  gridScript: {fileID: 1792175001}
+  gridScript: {fileID: 667202056}
   heuristic: {fileID: 348953}
 --- !u!114 &348953
 MonoBehaviour:
@@ -363,6 +363,59 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   astar: {fileID: 348952}
   rollText: {fileID: 823988798}
+--- !u!1 &667202055
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 667202057}
+  - component: {fileID: 667202056}
+  m_Layer: 0
+  m_Name: Grid (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &667202056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667202055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef9856ece0164e1788aed059206833d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridWidth: 0
+  gridHeight: 0
+  spacing: 6
+  mats: []
+  costs: []
+  start: {x: 3, y: 14, z: 0}
+  goal: {x: 13, y: 2, z: 0}
+  startSprite: {fileID: 2036897189}
+  goalSprite: {fileID: 1954945764}
+--- !u!4 &667202057
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667202055}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &823988796
 GameObject:
   m_ObjectHideFlags: 0
@@ -1153,6 +1206,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1792175002}
   - component: {fileID: 1792175001}
+  - component: {fileID: 1792175003}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -1167,7 +1221,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1792175000}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48fb1ee5cc40f4a5287bfe4a72f29e9e, type: 3}
   m_Name: 
@@ -1206,6 +1260,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1792175003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1792175000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef9856ece0164e1788aed059206833d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridWidth: 0
+  gridHeight: 0
+  spacing: 6
+  mats: []
+  costs: []
+  start: {x: 3, y: 14, z: 0}
+  goal: {x: 13, y: 2, z: 0}
+  startSprite: {fileID: 2036897189}
+  goalSprite: {fileID: 1954945764}
 --- !u!1 &1814435430
 GameObject:
   m_ObjectHideFlags: 0
@@ -1289,13 +1364,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 348955}
-        m_TargetAssemblyTypeName: FollowAStarScript, Assembly-CSharp
-        m_MethodName: PrincessSpeedUp
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1648,6 +1723,7 @@ SceneRoots:
   - {fileID: 1058467919}
   - {fileID: 2036897191}
   - {fileID: 1792175002}
+  - {fileID: 667202057}
   - {fileID: 348951}
   - {fileID: 1954945766}
   - {fileID: 1555404060}
