@@ -85,6 +85,8 @@ namespace Grids
         // Change the tile on (x, y) according to the char indicator
         public void ChangeTile(int x, int y, char indicator)
         {
+	        if(x<0 ||x >= gridWidth || y<0 || y >= gridHeight)
+		        return;
 	        StringBuilder sb = new StringBuilder(gridString[y]);
 	        sb[x] = indicator;
 	        Debug.Log(gridString[y] + "\n changed to :\n" + sb.ToString());
@@ -95,7 +97,8 @@ namespace Grids
         // Change the tile on (x, y) to a random material
         public void RandomChangeTile(int x, int y)
         {
-	        Debug.Log("KK");
+	        if(x<0 ||x >= gridWidth || y<0 || y >= gridHeight)
+		        return;
 	        var keys = materialDictionary.Keys.ToArray();
 	        char key = keys[Random.Range(0, keys.Length)];
 	        ChangeTile(x, y, key);
