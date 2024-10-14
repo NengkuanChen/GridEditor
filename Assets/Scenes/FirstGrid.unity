@@ -363,8 +363,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   astar: {fileID: 348952}
   rollText: {fileID: 823988798}
-  enemyPrincess: {fileID: 0}
-  enemyPrincessScript: {fileID: 0}
+  enemyPrincess: {fileID: 2032377897}
+  enemyPrincessScript: {fileID: 2032377898}
 --- !u!1 &667202055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1669,8 +1669,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   astar: {fileID: 2032377901}
   rollText: {fileID: 823988798}
-  enemyPrincess: {fileID: 0}
-  enemyPrincessScript: {fileID: 0}
+  enemyPrincess: {fileID: 348949}
+  enemyPrincessScript: {fileID: 348955}
 --- !u!120 &2032377899
 LineRenderer:
   serializedVersion: 2
@@ -1851,7 +1851,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 00162698c298f4cce978ff7b8d207bf9, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.05756491, g: 0.45297676, b: 0.554717, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

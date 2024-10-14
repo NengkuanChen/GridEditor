@@ -45,7 +45,6 @@ public class FollowAStarScript : MonoBehaviour {
 		playerRoll = Random.Range(1, 7);
 		rollText.text = "you have " + playerRoll.ToString() + " moves remaining";
 
-		enemyPrincessScript = GameObject.Find(enemyPrincess.ToString()).GetComponent<FollowAStarScript>();
 
 	}
 	
@@ -105,6 +104,17 @@ public class FollowAStarScript : MonoBehaviour {
 		if (playerRoll >= 2)
 		{
 			enemyPrincessScript.lerpPer = 0.1f;
+			playerRoll -= 2;
+			rollText.text = "you have " + playerRoll.ToString() + " moves remaining";
+		}
+		else
+		{
+			rollText.text = "you do not have enough!" + playerRoll.ToString() + " move left";
+		}
+
+		if (playerRoll < 0)
+		{
+			rollText.text = "you have no more moves!";
 		}
 
 	}
