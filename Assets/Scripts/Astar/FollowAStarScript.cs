@@ -1,6 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class FollowAStarScript : MonoBehaviour {
 
@@ -10,6 +14,7 @@ public class FollowAStarScript : MonoBehaviour {
 	public AStarScript astar;
 	public Step startPos;
 	public Step destPos;
+	
 
 	protected int currentStep = 1;
 
@@ -17,6 +22,9 @@ public class FollowAStarScript : MonoBehaviour {
 	
 	protected float startTime;
 	protected float travelStartTime;
+	
+	protected int playerRoll;
+	public TextMeshProUGUI rollText;
 
 	// Use this for initialization
 	protected virtual void Start () {
@@ -31,6 +39,9 @@ public class FollowAStarScript : MonoBehaviour {
 		Invoke("StartMove", path.nodeInspected/100f);
 
 		startTime = Time.realtimeSinceStartup;
+
+		playerRoll = Random.Range(1, 7);
+		rollText.text = "you have " + playerRoll.ToString() + " moves remaining";
 	}
 	
 	// Update is called once per frame
@@ -68,7 +79,43 @@ public class FollowAStarScript : MonoBehaviour {
 
 	public void PrincessSpeedUp()
 	{
-		lerpPer = 0.9f;
+		if (playerRoll >= 1)
+		{
+			lerpPer = 0.9f;
+			playerRoll--;
+			rollText.text = "you have " + playerRoll.ToString() + " moves remaining";
+			if (playerRoll == 1)
+			{
+				rollText.text = "you have " + playerRoll.ToString() + " move remaining";
+			}
+		}
+		else
+		{
+			rollText.text = "You have no more moves!";
+		}
+	}
+
+	public void ChangeTile()
+	{
+		if (playerRoll >= 2)
+		{
+			
+			playerRoll -= 2;
+			rollText.text = "you have " + playerRoll.ToString() + " moves remaining";
+			if (playerRoll == 1)
+			{
+				rollText.text = "you have " + playerRoll.ToString() + " move remaining";
+			}
+		}
+		else if (playerRoll <= 1)
+		{
+			rollText.text = "you do not have enough!" + playerRoll.ToString() + " move remaining";
+		}
+		else if (playerRoll <=0)
+		{
+			rollText.text = "You have no more moves!";
+		}
+
 	}
 
 	public void PrincessSpeedDown()

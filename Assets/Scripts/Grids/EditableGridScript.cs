@@ -4,6 +4,7 @@ using UnityEngine;
 
 
 [System.Serializable]
+//new data structure that takes a material and a cost
 public struct MapElement
 {
 	public Material material;
