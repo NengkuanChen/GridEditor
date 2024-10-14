@@ -13,7 +13,7 @@ public class GridScript : MonoBehaviour {
 	public Vector3 start = new Vector3(0,0);
 	public Vector3 goal = new Vector3(0,0);
 	
-	GameObject[,] gridArray;
+	public GameObject[,] gridArray;
 	
 	public GameObject startSprite;
 	public GameObject goalSprite;
@@ -21,7 +21,7 @@ public class GridScript : MonoBehaviour {
 	public virtual GameObject[,] GetGrid(){
 
 		if(gridArray == null){
-			
+			Debug.Log("Get Grid!!");
 			Debug.Log(start);
 			Debug.Log(goal);
 
@@ -58,6 +58,7 @@ public class GridScript : MonoBehaviour {
 
 	public virtual float GetMovementCost(GameObject go){
 		Material mat = go.GetComponent<MeshRenderer>().sharedMaterial;
+		
 		int i;
 
 		for(i = 0; i < mats.Length; i++){

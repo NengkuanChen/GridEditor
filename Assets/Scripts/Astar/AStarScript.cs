@@ -45,7 +45,7 @@ public class AStarScript : MonoBehaviour {
 		this.path = path;
 
 		//Get Grid information
-		pos = gridScript.GetGrid();
+		pos = gridScript.gridArray;
 		
 		start = gridScript.start;
 		goal = gridScript.goal;
