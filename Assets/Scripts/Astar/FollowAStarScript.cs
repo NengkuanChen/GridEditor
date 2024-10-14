@@ -65,5 +65,15 @@ public class FollowAStarScript : MonoBehaviour {
 		move = true;
 		travelStartTime = Time.realtimeSinceStartup;
 	}
+
+	public void PrincessSpeedUp()
+	{
+		lerpPer = 0.9f;
+	}
+
+	public void PrincessSpeedDown()
+	{
+		lerpPer = 0.1f;
+	}
 }
 

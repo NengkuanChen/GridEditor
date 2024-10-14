@@ -25,10 +25,14 @@ public class FirstGridScript : GridScript {
 		"----|---dd----|------------",
 	};
 
+	//public Renderer _objectRenderer;
+
 	// Use this for initialization
 	void Start () {
 		gridWidth = gridString[0].Length;
 		gridHeight = gridString.Length;
+
+		// _objectRenderer = GetComponent<Renderer>();
 	}
 	
 	protected override Material GetMaterial(int x, int y){
@@ -47,7 +51,7 @@ public class FirstGridScript : GridScript {
 		case 'r': 
 			mat = mats[3];
 			break;
-		case 'c':
+		case 'b':
 			mat = mats[4];
 			break;
 		default: 
@@ -60,10 +64,18 @@ public class FirstGridScript : GridScript {
 
 	public void Update()
 	{
+		
+		
 		if (Input.GetMouseButtonDown(0))
 		{
-			Debug.Log("The mouse click occured at:" + Input.mousePosition);
+			// Darryl tried but couldnt figure out how to change tiles on click at runtime
+			
+			// _objectRenderer.material = mats[3];
+			// _material = new Material(mats[3]);
+			// this._material = Mathf.RoundToInt(this.transform.position.x), Mathf.RoundToInt(transform.position.y));
+			// Debug.Log("This material is:" + this.GetMaterial() );
+			Debug.Log("The mouse click occured at: " + Mathf.Round(Input.mousePosition.x) + ", " + Mathf.RoundToInt(Input.mousePosition.y));
 		}
-		// throw new NotImplementedException();
+		
 	}
 }
