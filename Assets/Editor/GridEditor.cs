@@ -115,7 +115,7 @@ namespace Editor
         //
         // private static char[] invalidChars = {'\n', '\r', '\t', ' ', '\'', '\"', '\\', ',', ' '};
         
-        private static string validChars = "abcdeghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        private static string validChars = "abcdeghijklmnopqrstuvwxyzABCDEGHIJKLMNOPQRSTUVWXYZ0123456789";
         private static int currentCharIndex = 0;
         private static char currentChar => validChars[currentCharIndex];
         
