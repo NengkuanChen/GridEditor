@@ -25,6 +25,8 @@ public class FollowAStarScript : MonoBehaviour {
 	
 	protected int playerRoll;
 	public TextMeshProUGUI rollText;
+	public GameObject enemyPrincess;
+	public FollowAStarScript enemyPrincessScript;
 
 	// Use this for initialization
 	protected virtual void Start () {
@@ -42,6 +44,9 @@ public class FollowAStarScript : MonoBehaviour {
 
 		playerRoll = Random.Range(1, 7);
 		rollText.text = "you have " + playerRoll.ToString() + " moves remaining";
+
+		enemyPrincessScript = GameObject.Find(enemyPrincess.ToString()).GetComponent<FollowAStarScript>();
+
 	}
 	
 	// Update is called once per frame
@@ -95,25 +100,11 @@ public class FollowAStarScript : MonoBehaviour {
 		}
 	}
 
-	public void ChangeTile()
+	public void ChangeSpeed()
 	{
 		if (playerRoll >= 2)
 		{
-			
-			playerRoll -= 2;
-			rollText.text = "you have " + playerRoll.ToString() + " moves remaining";
-			if (playerRoll == 1)
-			{
-				rollText.text = "you have " + playerRoll.ToString() + " move remaining";
-			}
-		}
-		else if (playerRoll <= 1)
-		{
-			rollText.text = "you do not have enough!" + playerRoll.ToString() + " move remaining";
-		}
-		else if (playerRoll <=0)
-		{
-			rollText.text = "You have no more moves!";
+			enemyPrincessScript.lerpPer = 0.1f;
 		}
 
 	}
