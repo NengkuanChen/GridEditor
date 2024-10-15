@@ -31,6 +31,15 @@ public class AStarScript : MonoBehaviour {
 	protected Dictionary<Vector3, float> costSoFar = new Dictionary<Vector3, float>();
 	protected Vector3 current;
 
+
+	protected virtual void ReScan()
+	{
+		//This function should connect to 'New Path' button and reset grid.start variable to current player position
+		//Then it should find a new path to goal from that new position
+		//I'm still trying/researching	
+	}
+	
+	
 	// Use this for initialization
 	protected virtual void Start () {
 		InitAstar();
