@@ -65,21 +65,21 @@ namespace Grids
 
         void UpdateTile(int x, int y)
         {
-	        Destroy(gridArray[x, y]);
-	        
-	        float offsetX = (gridWidth  * -spacing)/2f;
-	        float offsetY = (gridHeight * spacing)/2f;
-	        
-	        GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-	        quad.transform.localScale = new Vector3(spacing, spacing, spacing);
-	        quad.transform.position = new Vector3(offsetX + x * spacing, 
-		        offsetY - y * spacing, 0);
-
-	        quad.transform.parent = transform;
-
-	        gridArray[x, y] = quad;
+	        // Destroy(gridArray[x, y]);
+	        //
+	        // float offsetX = (gridWidth  * -spacing)/2f;
+	        // float offsetY = (gridHeight * spacing)/2f;
+	        //
+	        // GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+	        // quad.transform.localScale = new Vector3(spacing, spacing, spacing);
+	        // quad.transform.position = new Vector3(offsetX + x * spacing, 
+		       //  offsetY - y * spacing, 0);
+	        //
+	        // quad.transform.parent = transform;
+	        //
+	        // gridArray[x, y] = quad;
 					
-	        quad.GetComponent<MeshRenderer>().sharedMaterial = GetMaterial(x, y);
+	        gridArray[x, y].GetComponent<MeshRenderer>().sharedMaterial = GetMaterial(x, y);
         }
 
         // Change the tile on (x, y) according to the char indicator
