@@ -368,23 +368,43 @@ namespace Editor
                 return;
             }
             EditorGUILayout.LabelField("Tile Creator", EditorStyles.boldLabel);
-            newTileMaterial =
-                (Material)EditorGUILayout.ObjectField("Material", newTileMaterial, typeof(Material), false);
-            newTileCost = EditorGUILayout.FloatField("Movement Cost", newTileCost);
-            if (GUILayout.Button("Create Tile"))
+            bool isMaterialValid = false;
+            newTileMaterial = (Material)EditorGUILayout.ObjectField("Material", newTileMaterial, typeof(Material), false);
+            // check material path
+            if (newTileMaterial)
             {
-                if (!newTileMaterial)
+                var path = AssetDatabase.GetAssetPath(newTileMaterial);
+                if (path.StartsWith("Assets/Resources/"))
                 {
-                    Debug.LogError("Material is null");
-                    return;
+                    isMaterialValid = true;
                 }
-                var newChar = UniqueCharGenerator.GetUniqueChar();
-                while (tileTypes.Exists(tileType => tileType.Symbol == newChar))
+                else
                 {
-                    newChar = UniqueCharGenerator.GetUniqueChar();
+                    EditorGUILayout.HelpBox("Material must be in Resources folder", MessageType.Error);
                 }
-                tileTypes.Add(new TileType(newTileMaterial, newTileCost, newChar));
-                Debug.Log($"Tile created successfully, symbol: {newChar}");
+            }
+            else
+            {
+                EditorGUILayout.HelpBox("Material is null", MessageType.Error);
+            }
+            newTileCost = EditorGUILayout.FloatField("Movement Cost", newTileCost);
+            if (isMaterialValid)
+            {
+                if (GUILayout.Button("Create Tile"))
+                {
+                    if (!newTileMaterial)
+                    {
+                        Debug.LogError("Material is null");
+                        return;
+                    }
+                    var newChar = UniqueCharGenerator.GetUniqueChar();
+                    while (tileTypes.Exists(tileType => tileType.Symbol == newChar))
+                    {
+                        newChar = UniqueCharGenerator.GetUniqueChar();
+                    }
+                    tileTypes.Add(new TileType(newTileMaterial, newTileCost, newChar));
+                    Debug.Log($"Tile created successfully, symbol: {newChar}");
+                }
             }
 
             EditorGUILayout.EndFoldoutHeaderGroup();
@@ -436,8 +456,23 @@ namespace Editor
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.BeginVertical();
                 tiles.Cost = EditorGUILayout.FloatField("Movement Cost", tiles.Cost);
-                tiles.Material = (Material) EditorGUILayout.ObjectField("Material", tiles.Material, typeof(Material),
-                    false);
+                var material = (Material) EditorGUILayout.ObjectField("Material", tiles.Material, typeof(Material),
+                    false);;
+                if (material)
+                {
+                    tiles.Material = material;
+                    var path = AssetDatabase.GetAssetPath(tiles.Material);
+                    if (path.StartsWith("Assets/Resources/"))
+                    {
+                        tiles.Material = tiles.Material;
+                    }
+                    else
+                    {
+                        EditorGUILayout.HelpBox("Material must be in Resources folder", MessageType.Error);
+                    }
+                }
+
+                
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.EndHorizontal();
             }
